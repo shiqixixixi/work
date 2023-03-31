@@ -8,6 +8,7 @@ import glob
 import tkinter as tk
 from tkinter import filedialog
 import shutil
+
 # 获取当前工作目录路径
 current_dir = os.getcwd()
 
@@ -30,28 +31,22 @@ if not file_path:
     exit()
 
 # 读取用户选择的Excel文件
+
 # 读取excel文件，假设文件名为data.xlsx
 #df = pd.read_excel("data.xlsx")
 
 df = pd.read_excel(file_path)
-
 # 获取第一列和第二列的内容，假设第一列是搜索的关键词，第二列是保存的文件名
-keywords = df.iloc[:,2]
-imgname = df.iloc[:,0]
-dm = df.iloc[0,5] 
-
+keywords = df.iloc[:,0]
+imgname = df.iloc[:,2]
+dm = df.iloc[0,1] 
 path = str(dm)
+# 创建一个文件夹来保存图片，假设文件夹名为images
+#os.mkdir("images")
 
-# 创建一个文件夹来保存图片，假设文件夹名为images，如果不存在择创建 反之跳过
-image_file = "images"
-if not os.path.exists(image_file):
-    os.makedirs(image_file)
-else:
-    print(f"{image_file}文件夹已经存在，已直接使用。")
-
-if os.path.exists(f'{image_file}/{path}'):  # 判断文件夹是否存在
-    for filename in os.listdir(f'{image_file}/{path}'):  # 清空文件夹中的内容
-        file_path = os.path.join(f'{image_file}/{path}', filename)
+if os.path.exists(path):  # 判断文件夹是否存在
+    for filename in os.listdir(path):  # 清空文件夹中的内容
+        file_path = os.path.join(path, filename)
         try:
             if os.path.isfile(file_path):
                 os.unlink(file_path)
@@ -60,13 +55,13 @@ if os.path.exists(f'{image_file}/{path}'):  # 判断文件夹是否存在
         except Exception as e:
             print('Failed to delete %s. Reason: %s' % (file_path, e))
 else:
-    os.makedirs(f'{image_file}/{path}')  # 创建文件夹
+    os.makedirs(path)  # 创建文件夹
 
 # 遍历每个关键词，搜索图片并下载保存到文件夹中
 for i, keyword in enumerate(keywords):
     # 构造Bing图片搜索的网址，假设每个关键词只下载第一张图片
-    url = f"https://cn.bing.com/images/search?q={keyword}&first=1"
-    #url = f"https://cn.bing.com/images/search?q={keyword}&first=1&qft=+filterui:imagesize-custom_1024_768"
+    #url = f"https://cn.bing.com/images/search?q={keyword}&first=1"
+    url = f"https://cn.bing.com/images/search?q={keyword}&first=1&qft=+filterui:imagesize-custom_1024_768"
     #url = f"https://www.bing.com/images/search?q={keyword}&first=1"
     response = requests.get(url)
     # 判断请求是否成功
@@ -81,7 +76,7 @@ for i, keyword in enumerate(keywords):
             # 获取图片的格式，假设是jpg或png
             ext = img_url.split(".")[-1]
             # 构造图片的文件名，假设是从imgname列表中获取，并加上扩展名
-            filename = f"{image_file}/{path}/{'{:05d}'.format(imgname[i])}.jpg"
+            filename = f"{path}/{(imgname[i])}.jpg"
             #filename = f"images/{imgname[i]}.jpg"
             #filename = f"images/{imgname[i]}.{ext}"
             # 打开一个文件并写入图片数据
@@ -96,24 +91,28 @@ for i, keyword in enumerate(keywords):
         # 打印错误信息
         print(f"Failed to access {url}")
 
-#压缩图片拓展名为"*.zip"
-def get_jpg_files(path):
-    jpg_files = []
-    for root, dirs, files in os.walk(f'{image_file}/{path}'):
-        for file in files:
-            if file.endswith('.jpg'):
-                jpg_files.append(os.path.join(root, file))
-    return jpg_files
+# 设置源文件夹的路径
+source_dir = f'{path}/'
 
-# 压缩文件为zip格式
-def compress_to_zip(file_paths, zip_file):
-    with zipfile.ZipFile(zip_file, 'w') as zip:
-        for file in file_paths:
-            zip.write(file, os.path.basename(file))
+# 设置目标文件夹的路径
+target_dir = f'{path}/'
 
-# 调用函数获取图片文件路径列表
-jpg_files = get_jpg_files(path)
+# 分割数量
+split_num = 50
 
-# 将所有jpg文件压缩为zip文件
-zip_file = f'{image_file}/{path}.zip'
-compress_to_zip(jpg_files, zip_file)
+# 遍历源文件夹中的文件
+for i, filename in enumerate(os.listdir(source_dir)):
+    # 获取文件的完整路径
+    filepath = os.path.join(source_dir, filename)
+    
+    # 设置目标文件夹的名称
+    target_subdir_name = f'folder_{i // split_num + 1}'
+    target_subdir = os.path.join(target_dir, target_subdir_name)
+    
+    # 如果目标文件夹不存在，就创建它
+    if not os.path.exists(target_subdir):
+        os.makedirs(target_subdir)
+    
+    # 将文件复制到目标文件夹
+    shutil.copy2(filepath, target_subdir)
+
