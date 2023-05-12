@@ -10,6 +10,12 @@ import glob
 import tkinter as tk
 from tkinter import filedialog
 import shutil
+# 创建一个文件夹，如果不存在择创建 反之跳过
+importfile = "已生成的导入模板"
+if not os.path.exists(importfile):
+    os.makedirs(importfile)
+else:
+    print(f"{importfile}文件夹已经存在，已直接使用。")
 
 # 获取当前工作目录路径
 current_dir = os.getcwd()
@@ -74,7 +80,7 @@ new_excel = pd.DataFrame(columns=['编号', '名称', '所属小类', '所属大
 
 # 从指定Excel文件中读取数据并选择需要的列
 old_excel = pd.read_excel(file_path, sheet_name='商品', 
-                          usecols=['编号', '名称', '所属小类', '所属大类', '商品类型'],
+                          usecols=['编号', '名称', '所属小类', '所属大类', '商品类型','前台排序'],
                           dtype={'编号': str})
 
 ckj_excel = pd.read_excel(file_path, sheet_name='商品')
@@ -101,6 +107,19 @@ for row in sorted(ref_price_rows.keys()):
         ref_price = ref_price_rows[row][col_num]
         result += f"{col_name}(参考价:{ref_price}.00 预估成本:0.00)," # 将每个单元格的数据后面添加一个'、'符号
     new_excel.at[row-2, '单位'] = result.rstrip(',') # 将最右侧的'、'符号去掉，并将数据赋值给new_excel['单位']的对应行
+
+
+# 使用生成前台排序从1开始 想关闭请注释(new_excel.at[i - 1, '前台排序'] = i_str)取消注释(new_excel[qtpx] = old_excel['前台排序'])
+start_number = 1
+end_number = ws.max_row - 0  # 减去标题行为有效数据行数
+
+for i, row in enumerate(ws.iter_rows(min_row=2), start=start_number):
+    row[0].value = i
+    i_str = str(i)
+    new_excel.at[i - 1, '前台排序'] = i_str
+
+
+
 #份(参考价:12.00 预估成本:0.00),两份(参考价:18.00 预估成本:0.00)
 # 将读取到的数据添加到新Excel文件中
 new_excel['编号'] = old_excel['编号']
@@ -109,7 +128,7 @@ new_excel['所属小类'] = old_excel['所属小类']
 new_excel['所属大类'] = old_excel['所属大类']
 new_excel['商品类型'] = old_excel['商品类型']
 new_excel[qy] = '1'
-new_excel[qtpx] = ''
+#new_excel[qtpx] = old_excel['前台排序'] #获取原来的排序
 new_excel[ckj1] = ''
 new_excel[hyj1] = ''
 new_excel[zjm] = ''
@@ -133,7 +152,7 @@ new_excel[yxjf] = '1'
 new_excel[jrzdxf] = '1'
 
 # 将数据写入到新的Excel文件中
-writer = pd.ExcelWriter(f'{file_name}.xlsx', engine='openpyxl')
+writer = pd.ExcelWriter(f'{importfile}/{file_name}.xlsx', engine='openpyxl')
 writer.book = Workbook() # 新建excel文件
 new_excel.to_excel(writer, sheet_name='商品', index=False) # 写入数据
 writer.save()
