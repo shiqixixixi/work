@@ -1,0 +1,8 @@
+panda
+openpyxl
+zipfile
+BeautifulSoup
+glob
+tkinter
+tk
+shutil

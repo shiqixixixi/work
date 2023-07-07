@@ -1,3 +1,4 @@
+import shutil
 from ctypes.wintypes import WPARAM
 from tkinter import N
 import pandas as pd
@@ -9,7 +10,8 @@ from bs4 import BeautifulSoup
 import glob
 import tkinter as tk
 from tkinter import filedialog
-import shutil
+
+
 # 创建一个文件夹，如果不存在择创建 反之跳过
 importfile = "已生成的导入模板"
 if not os.path.exists(importfile):
@@ -153,6 +155,6 @@ new_excel[jrzdxf] = '1'
 
 # 将数据写入到新的Excel文件中
 writer = pd.ExcelWriter(f'{importfile}/{file_name}.xlsx', engine='openpyxl')
-writer.book = Workbook() # 新建excel文件
+writer.book = Workbook()  #新建excel文件
 new_excel.to_excel(writer, sheet_name='商品', index=False) # 写入数据
 writer.save()
