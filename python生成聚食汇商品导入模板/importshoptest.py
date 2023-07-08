@@ -80,7 +80,7 @@ new_excel = pd.DataFrame(columns=['编号', '名称', '所属小类', '所属大
 
 # 从指定Excel文件中读取数据并选择需要的列
 old_excel = pd.read_excel(file_path, sheet_name='商品', 
-                          usecols=['编号', '名称', '所属小类', '所属大类', '商品类型','前台排序'],
+                          usecols=['编号', '名称', '所属小类', '所属大类', '商品类型','前台排序','套餐商品'],
                           dtype={'编号': str})
 
 ckj_excel = pd.read_excel(file_path, sheet_name='商品')
@@ -119,7 +119,6 @@ for i, row in enumerate(ws.iter_rows(min_row=2), start=start_number):
     new_excel.at[i - 1, '前台排序'] = i_str
 
 
-
 #份(参考价:12.00 预估成本:0.00),两份(参考价:18.00 预估成本:0.00)
 # 将读取到的数据添加到新Excel文件中
 new_excel['编号'] = old_excel['编号']
@@ -138,7 +137,7 @@ new_excel[qyzf] = ''
 new_excel[spzf] = ''
 new_excel[tcsp] = ''
 new_excel[spzflx] = ''
-new_excel[tcsp] = ''
+new_excel[tcsp] = old_excel['套餐商品']
 new_excel[blzk] = '1'
 new_excel[sjsp] = ''
 new_excel[lssp] = ''
@@ -156,3 +155,4 @@ writer = pd.ExcelWriter(f'{importfile}/{file_name}.xlsx', engine='openpyxl')
 writer.book = Workbook() # 新建excel文件
 new_excel.to_excel(writer, sheet_name='商品', index=False) # 写入数据
 writer.save()
+

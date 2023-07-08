@@ -80,7 +80,7 @@ new_excel = pd.DataFrame(columns=['编号', '名称', '所属小类', '所属大
 
 # 从指定Excel文件中读取数据并选择需要的列
 old_excel = pd.read_excel(file_path, sheet_name='商品', 
-                          usecols=['编号', '名称', '所属小类', '所属大类', '商品类型','前台排序'],
+                          usecols=['编号', '名称', '所属小类', '所属大类', '商品类型','前台排序','套餐商品'],
                           dtype={'编号': str})
 
 ckj_excel = pd.read_excel(file_path, sheet_name='商品')
@@ -138,7 +138,7 @@ new_excel[qyzf] = ''
 new_excel[spzf] = ''
 new_excel[tcsp] = ''
 new_excel[spzflx] = ''
-new_excel[tcsp] = ''
+new_excel[tcsp] = old_excel['套餐商品']
 new_excel[blzk] = '1'
 new_excel[sjsp] = ''
 new_excel[lssp] = ''
