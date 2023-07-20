@@ -47,8 +47,8 @@ if not file_path:
 #df = pd.read_excel("data.xlsx")
 
 # 读取D2单元格的值
-wb= openpyxl.load_workbook(file_path)
-wbdwdj= openpyxl.load_workbook(file_path)
+wb = openpyxl.load_workbook(file_path)
+wbdwdj = openpyxl.load_workbook(file_path)
 
 ws = wb.active
 wsdwdj = wbdwdj.active
