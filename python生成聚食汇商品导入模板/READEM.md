@@ -1,6 +1,6 @@
-### 下载python3
-下载完成后 在代码目录下执行 
+# 下载安装python3
+下载完成后在代码目录下执行命令
 ```shell
-$pip install -r requirements.txt
+$ pip install -r requirements.txt
 ```
 
