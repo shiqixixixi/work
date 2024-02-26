@@ -1,14 +1,13 @@
 import shutil
 from ctypes.wintypes import WPARAM
-from tkinter import N
 import pandas as pd
 import openpyxl
 from openpyxl import Workbook, load_workbook
 import os
-import zipfile
 from bs4 import BeautifulSoup
 import glob
 import tkinter as tk
+from tkinter import N
 from tkinter import filedialog
 
 
@@ -47,8 +46,8 @@ if not file_path:
 #df = pd.read_excel("data.xlsx")
 
 # 读取D2单元格的值
-wb= openpyxl.load_workbook(file_path)
-wbdwdj= openpyxl.load_workbook(file_path)
+wb = openpyxl.load_workbook(file_path)
+wbdwdj = openpyxl.load_workbook(file_path)
 
 ws = wb.active
 wsdwdj = wbdwdj.active
