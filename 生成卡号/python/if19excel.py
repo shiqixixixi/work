@@ -2,7 +2,17 @@ import random
 import time
 import xlsxwriter
 
-quantity = 1000 #定义的卡号数量
+quantity = input("请输入要生成的卡号数量（如果不输入默认为1000）：")
+if quantity:
+    try:
+        quantity = int(quantity)
+    except ValueError:
+        quantity = 1000
+else:
+    quantity = 1000
+
+
+#quantity = 1000 #手动定义的卡号数量
 
 def generate_random_number():
     first_two_digits = random.randint(46, 57)  # 前两位数字在46到57之间的随机整数

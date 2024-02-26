@@ -2,7 +2,16 @@ import random
 from datetime import datetime
 import pandas as pd
 
-quantity = 1000 #定义的卡号数量
+quantity = input("请输入要生成的卡号数量（如果不输入默认为1000）：")
+if quantity:
+    try:
+        quantity = int(quantity)
+    except ValueError:
+        quantity = 1000
+else:
+    quantity = 1000
+#quantity = 1000 #定义的卡号数量
+
 def generate_random_numbers(n):
     result = set()
     while len(result) < n:
