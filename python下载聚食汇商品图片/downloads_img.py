@@ -36,9 +36,10 @@ if not file_path:
 df = pd.read_excel(file_path)
 
 # 获取第一列和第二列的内容，假设第一列是搜索的关键词，第二列是保存的文件名
-keywords = df.iloc[:,2]
-imgname = df.iloc[:,0]
-dm = df.iloc[0,5] 
+keywords = df['名称'] 
+imgname =df['编号'] 
+#dm = df['所属大类'] 
+dm = df.iloc[0,5]
 
 path = str(dm)
 

@@ -1,16 +1,15 @@
-import shutil
 from ctypes.wintypes import WPARAM
+from tkinter import N
 import pandas as pd
 import openpyxl
 from openpyxl import Workbook, load_workbook
 import os
+import zipfile
 from bs4 import BeautifulSoup
 import glob
 import tkinter as tk
-from tkinter import N
 from tkinter import filedialog
-
-
+import shutil
 # 创建一个文件夹，如果不存在择创建 反之跳过
 importfile = "已生成的导入模板"
 if not os.path.exists(importfile):
@@ -46,13 +45,13 @@ if not file_path:
 #df = pd.read_excel("data.xlsx")
 
 # 读取D2单元格的值
-wb = openpyxl.load_workbook(file_path)
-wbdwdj = openpyxl.load_workbook(file_path)
+wb= openpyxl.load_workbook(file_path)
+wbdwdj= openpyxl.load_workbook(file_path)
 
 ws = wb.active
 wsdwdj = wbdwdj.active
 
-file_name = ws['F2'].value
+file_name = ws['G2'].value
 # 创建新的Excel文件并定义列名
 qy = '启用'
 qtpx = '前台排序'
@@ -154,6 +153,6 @@ new_excel[jrzdxf] = '1'
 
 # 将数据写入到新的Excel文件中
 writer = pd.ExcelWriter(f'{importfile}/{file_name}.xlsx', engine='openpyxl')
-writer.book = Workbook()  #新建excel文件
+writer.book = Workbook() # 新建excel文件
 new_excel.to_excel(writer, sheet_name='商品', index=False) # 写入数据
 writer.save()
